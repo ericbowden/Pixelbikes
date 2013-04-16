@@ -19,14 +19,16 @@ function Player(client) {
     //http://api.flickr.com/services/rest/?page=3&method=flickr.interestingness.getList&api_key=705626789aa232c6d1be4f5811ce0491&per_page=1&format=json&nojsoncallback=1
     //http://farm{farm-id}.staticflickr.com/{server-id}/{id}_{secret}.jpg
     request.get({
-        url:"http://api.flickr.com/services/rest/?page="+util.objectSize(players)+"&method=flickr.interestingness.getList&api_key=705626789aa232c6d1be4f5811ce0491&per_page=1&format=json&nojsoncallback=1",
+        url:"http://api.flickr.com/services/rest/?page="+util.objectSize(players)+"&method=flickr.interestingness.getList&oauth_consumer_key=181e7ab409966cf55e969d6956a46023&per_page=1&format=json&nojsoncallback=1",
         json: true
     },function (error, response, body) {
-        if (!error && response.statusCode == 200) {
+        if (!error && response.statusCode == 200 && body.stat == "ok") {
             var photo = body.photos.photo[0];
             me.image = "http://farm"+photo.farm+".staticflickr.com/"+photo.server+"/"+photo.id+"_"+photo.secret+".jpg"
-            start();
-        }
+
+        } else
+            console.log(error,response.statusCode,body.stat);
+        start();
     });
 
     function start() {
